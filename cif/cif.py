@@ -1010,7 +1010,7 @@ def pipelineTransformations(df, showPlots = True, savePlots = None, saveLogs = N
     
 # BRY-BOSCHAN ALGORITHM
 
-def getLocalExtremes(df, window, showPlots = True, savePlots = None, nameSuffix = ''):
+def getLocalExtremes(df, window=12, showPlots = True, savePlots = None, nameSuffix = ''):
     
     """
     Find local maxima/minima in df. Mark all point which are higher/lower than the nearest neighbours inside the window.
