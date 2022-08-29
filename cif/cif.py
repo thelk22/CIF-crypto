@@ -1271,7 +1271,7 @@ def checkNeighbourhood(df, indicator, printDetails = True, showPlots = True, sav
     return(dataInd)
 
 
-def checkCycleLength(df, indicator, cycleLength = 15, printDetails = True, showPlots = True, savePlots = None, nameSuffix = '', saveLogs = None):
+def checkCycleLength(df, indicator, cycleLength = 36, printDetails = True, showPlots = True, savePlots = None, nameSuffix = '', saveLogs = None):
     
     """
     Check the minimal length of cycle, otherwise delete one of the turning
@@ -1284,7 +1284,7 @@ def checkCycleLength(df, indicator, cycleLength = 15, printDetails = True, showP
     indicator: pandas.DataFrame
         pandas DataFrame (with one column), vector of local extremes
     cycleLength: int
-        minimal lenght of the cycle (in months)
+        minimal length of the cycle (in weeks)
     printDetails: bool
         print details about deleted extremes?
     showPlots: bool
@@ -1425,7 +1425,7 @@ def checkCycleLength(df, indicator, cycleLength = 15, printDetails = True, showP
     return(dataInd)
 
 
-def checkPhaseLength(df, indicator, keepFirst = False, phaseLength = 5, meanVal = 100, printDetails = True, showPlots = True, savePlots = None, nameSuffix = '', saveLogs = None):
+def checkPhaseLength(df, indicator, keepFirst = False, phaseLength = 12, meanVal = 100, printDetails = True, showPlots = True, savePlots = None, nameSuffix = '', saveLogs = None):
     
     """
     Check the minimal length of phase, otherwise delete one of the turning
@@ -1442,7 +1442,7 @@ def checkPhaseLength(df, indicator, keepFirst = False, phaseLength = 5, meanVal 
         the first peak or trough is kept if True, the highest peak or the lowest
         trough is kept if False (deault)
     phaseLength: int
-        minimal lenght of the phase (in months)
+        minimal length of the phase (in weeks)
     meanVal: float
         mean value of the column, for series normalised by normaliseSeries() equals 100 (default)
     printDetails: bool
@@ -1692,7 +1692,7 @@ def pipelineOneColumnTPDetection(col, printDetails = True, showPlots = True, sav
     
     # a) Looking for local maxima/minima
     
-    col_ind_local = getLocalExtremes(df = col, showPlots = showPlots, savePlots = savePlots, nameSuffix = '_04_localExt')
+    col_ind_local = getLocalExtremes(df = col, window=12, showPlots = showPlots, savePlots = savePlots, nameSuffix = '_04_localExt')
     
     
     # b) Check the turning points alterations
@@ -1703,7 +1703,7 @@ def pipelineOneColumnTPDetection(col, printDetails = True, showPlots = True, sav
     
     # c) Check minimal length of cycle (15 months)
     
-    col_ind_cycleLength = checkCycleLength(df = col, indicator = col_ind_alter, printDetails = printDetails, showPlots = showPlots, saveLogs = saveLogs)
+    col_ind_cycleLength = checkCycleLength(df = col, indicator = col_ind_alter, cycleLength=24, printDetails = printDetails, showPlots = showPlots, saveLogs = saveLogs)
     
     
     # d) Check the turning points alterations again
@@ -1714,7 +1714,7 @@ def pipelineOneColumnTPDetection(col, printDetails = True, showPlots = True, sav
     
     # e) Check minimal length of phase (5 months)
     
-    col_ind_phaseLength = checkPhaseLength(df = col, indicator = col_ind_alterAgain, printDetails = printDetails, showPlots = showPlots, saveLogs = saveLogs)
+    col_ind_phaseLength = checkPhaseLength(df = col, indicator = col_ind_alterAgain, phaseLength=12, meanVal=col.mean()[0], printDetails = printDetails, showPlots = showPlots, saveLogs = saveLogs)
     
     
     # f) Check the turning points alterations for the last time
