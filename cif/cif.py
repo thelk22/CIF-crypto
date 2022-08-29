@@ -1010,15 +1010,17 @@ def pipelineTransformations(df, showPlots = True, savePlots = None, saveLogs = N
     
 # BRY-BOSCHAN ALGORITHM
 
-def getLocalExtremes(df, showPlots = True, savePlots = None, nameSuffix = ''):
+def getLocalExtremes(df, window, showPlots = True, savePlots = None, nameSuffix = ''):
     
     """
-    Find local maxima/minima in df. Mark all point which are higher/lower than their 5 nearest neighbours.
+    Find local maxima/minima in df. Mark all point which are higher/lower than the nearest neighbours inside the window.
     
     Parameters
     -----
     df: pandas.DataFrame
         pandas DataFrame (with one column)
+    window: int
+        size of window (number of points) to either side of the point of interest
     showPlots: bool
         show plots?
     savePlots: str or None
@@ -1035,7 +1037,7 @@ def getLocalExtremes(df, showPlots = True, savePlots = None, nameSuffix = ''):
     
     dataShifted = pd.DataFrame(index = df.index)
     
-    for i in range(-5, 5):
+    for i in range(-window, window):
         
         dataShifted = pd.concat([dataShifted, df.shift(i).rename(columns = {df.columns[0]: 'shift_' + str(i)})], axis = 1)
         
@@ -1045,8 +1047,8 @@ def getLocalExtremes(df, showPlots = True, savePlots = None, nameSuffix = ''):
     
     # No extremes near the beginning/end of the series
     
-    dataInd[:5] = 0
-    dataInd[-5:] = 0
+    dataInd[:window] = 0
+    dataInd[-window:] = 0
     
     if showPlots or savePlots:
         
